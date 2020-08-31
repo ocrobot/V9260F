@@ -21,7 +21,7 @@ void V9260F::writeRegisterData(uint16_t Addr, uint32_t writeData, byte Device_ad
   printData[5] = writeData >> 16;
   printData[6] = writeData >> 24;
   printData[7] = uchar_checksum(printData, 7); //校验值
-  Serial1.write(printData, 8); //发送请求
+  _Serial->write(printData, 8); //发送请求
   delay(400);
   //消息应答
   byte tempReadData[4];
