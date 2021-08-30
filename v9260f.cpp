@@ -1,9 +1,222 @@
 #include "v9260f.h"
 
-void V9260F::begin(HardwareSerial& SerialData)
+
+
+void V9260F::begin(HardwareSerial& SerialData,uint8_t device_addr_number)
 {
     _Serial = &SerialData; 
+	_device_addr_number = device_addr_number;
 }
+
+void V9260F::init()
+{
+	writeRegisterData(ADDR_SystemConfigRegister, SystemConfigRegister, _device_addr_number);
+	writeRegisterData(ADDR_MeteringControlRegister0, MeteringControlRegister0, _device_addr_number);
+	writeRegisterData(ADDR_MeteringControlRegister1, MeteringControlRegister1, _device_addr_number);
+	writeRegisterData(ADDR_AnalogControlRegister0, AnalogControlRegister0, _device_addr_number);
+	writeRegisterData(ADDR_AnalogControlRegister1, AnalogControlRegister1, _device_addr_number);
+	writeRegisterData(ADDR_AnalogControlRegister2, AnalogControlRegister2, _device_addr_number);
+	
+	writeRegisterData(ADDR_ZZDCI, ZZDCI, _device_addr_number);
+	writeRegisterData(ADDR_ZZDCU, ZZDCU, _device_addr_number);
+	writeRegisterData(ADDR_WARTI, WARTI, _device_addr_number);
+	
+	writeRegisterData(ADDR_WARTU, WARTU, _device_addr_number);
+	writeRegisterData(ADDR_WARTM, WARTM, _device_addr_number);
+	writeRegisterData(ADDR_WBRTI, WBRTI, _device_addr_number);
+	writeRegisterData(ADDR_WBRTU, WBRTU, _device_addr_number);
+	writeRegisterData(ADDR_WAPT, WAPT, _device_addr_number);
+	writeRegisterData(ADDR_WAQT, WAQT, _device_addr_number);
+	writeRegisterData(ADDR_WWAPT, WWAPT, _device_addr_number);
+	writeRegisterData(ADDR_WWAQT, WWAQT, _device_addr_number);
+	writeRegisterData(ADDR_WBPT, WBPT, _device_addr_number);
+	writeRegisterData(ADDR_WBQT, WBQT, _device_addr_number);
+	writeRegisterData(ADDR_WWBPT, WWBPT, _device_addr_number);
+	writeRegisterData(ADDR_WWBQT, WWBQT, _device_addr_number);
+	writeRegisterData(ADDR_EGYHT, EGYHT, _device_addr_number);
+	writeRegisterData(ADDR_CTH, CTH, _device_addr_number);
+	writeRegisterData(ADDR_IDETTH, IDETTH, _device_addr_number);
+	writeRegisterData(ADDR_BandPassFilter, BandPassFilter, _device_addr_number);
+	
+	//校验数据计算
+	uint32_t sum_check = 0xFFFFFFFF - 
+						(
+						SystemConfigRegister + 
+						MeteringControlRegister0 + 
+						MeteringControlRegister1 + 
+						AnalogControlRegister0 + 
+						AnalogControlRegister1 + 
+						AnalogControlRegister2 +
+						ZZDCI +
+						ZZDCU +
+						WARTI +
+						WARTU +
+						WARTM +
+						WBRTI +
+						WBRTU +
+						WAPT +
+						WAQT +
+						WWAPT +
+						WWAQT +
+						WBPT +
+						WBQT +
+						WWBPT +
+						WWBQT +
+						EGYHT +
+						CTH +
+						IDETTH +
+						BandPassFilter
+						);
+	writeRegisterData(ADDR_CKSUM, sum_check, _device_addr_number);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//获取数据响应
+
+
+
+//频率数据
+
+int32_t V9260F::FREQ()
+{
+	uint16_t dataAddr = 0x019A;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+
+int32_t V9260F::SAFREQ()
+{
+	uint16_t dataAddr = 0x011D;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+
+
+int32_t V9260F::AFREQ()
+{
+	uint16_t dataAddr = 0x011E;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+
+
+//电压电流数据
+int32_t V9260F::ARRTI()  //全波电流原始值
+{
+	uint16_t dataAddr = 0x0105;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARRTU()  //全波电压有效值原始值
+{
+	uint16_t dataAddr = 0x0104;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARRTM()  //M通道有效原始值
+{
+	uint16_t dataAddr = 0x0106;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::BRRTU()  //基波电压有效原始值
+{
+	uint16_t dataAddr = 0x0109;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::BRRTI()  //基波电流有效原始值
+{
+	uint16_t dataAddr = 0x010A;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARTI()  //全波电流有效瞬时值
+{
+	uint16_t dataAddr = 0x010E;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARTU()   //全波电压有效瞬时值
+{
+	uint16_t dataAddr = 0x010D;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARTM()   //M通道电压有效瞬时值
+{
+	uint16_t dataAddr = 0x010F;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ARTIM()  //
+{
+	uint16_t dataAddr = 0x00F8;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::BRTU()   //基波电压有效瞬时值
+{
+	uint16_t dataAddr = 0x0112;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::BRTI()   //基波电流有效瞬时值
+{
+	uint16_t dataAddr = 0x0113;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::AARTU()  //全波电压有效平均值
+{
+	uint16_t dataAddr = 0x011B;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::AARTI()  //全波电流有效平均值
+{
+	uint16_t dataAddr = 0x011C;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::AARTM()  //M通道有效平均值
+{
+	uint16_t dataAddr = 0x0117;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ABRTU()  //基波电压有效平均值
+{
+	uint16_t dataAddr = 0x0121;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+int32_t V9260F::ABRTI()  //基波电流有效平均值
+{
+	uint16_t dataAddr = 0x0122;
+	uint32_t tempData = readRegisterData(dataAddr,_device_addr_number);
+	return (int32_t)tempData;
+}
+
+
 
 
 
