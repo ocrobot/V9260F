@@ -41,6 +41,11 @@ class V9260F
 		
 		//配置参数
 		
+		bool XTAL3P2M();   //外部晶振开关  0 = 6.5536Mhz(defaulet)   1 = 3.2726Mhz
+ 		void XTAL3P2M(bool sw);
+		
+		bool XTALLP();    //使用3.2768M时 必须为1  6.5536M 保持默认 0 
+		void XTALLP(bool sw);
 		
 		
 		//获取数据
@@ -79,18 +84,19 @@ class V9260F
 		//int32_t 
 		//int32_t 
 		//int32_t 
-		
-		
-		
-		
-		
-		
 
         void writeRegisterData(uint16_t Addr, uint32_t writeData, byte Device_addr);   //写入数据至寄存器
         uint32_t readRegisterData(uint16_t Addr, byte Device_addr);                 //从寄存器获取数据 uint32
         void readRegisterData(uint16_t Addr, byte Device_addr,byte *DataOutput);     //4字节数组传出
    
     private:
+		//寄存器位读位写函数
+		bool readBitData(uint32_t RegisterData,uint8_t RegisterAddr);
+		void setBitData(uint32_t RegisterData,uint8_t RegisterAddr,bool sw);
+	
+	
+	
+	
         HardwareSerial *_Serial;
 		
 		uint32_t SystemConfigRegister = 0x01FB0004;  //0x180

@@ -10,6 +10,7 @@ void V9260F::begin(HardwareSerial& SerialData,uint8_t device_addr_number)
 
 void V9260F::init()
 {
+	//默认参数配置
 	writeRegisterData(ADDR_SystemConfigRegister, SystemConfigRegister, _device_addr_number);
 	writeRegisterData(ADDR_MeteringControlRegister0, MeteringControlRegister0, _device_addr_number);
 	writeRegisterData(ADDR_MeteringControlRegister1, MeteringControlRegister1, _device_addr_number);
@@ -73,10 +74,31 @@ void V9260F::init()
 
 
 
+//配置功能
+//0x0185  模拟控制寄存器
+
+bool V9260F::XTAL3P2M()   //外部晶振开关  0 = 6.5536Mhz(defaulet)   1 = 3.2726Mhz
+{
+	uint8_t bitAddr = 19;
+	return readBitData(AnalogControlRegister0,bitAddr);
+}
+void V9260F::XTAL3P2M(bool sw)
+{
+	uint8_t bitAddr = 19;
+	setBitData(AnalogControlRegister0,bitAddr,sw);
+}
 
 
-
-
+bool V9260F::XTALLP()    //使用3.2768M时 必须为1  6.5536M 保持默认 0 
+{
+	uint8_t bitAddr = 18;
+	return readBitData(AnalogControlRegister0,bitAddr);
+}
+void V9260F::XTALLP(bool sw)
+{
+	uint8_t bitAddr = 18;
+	setBitData(AnalogControlRegister0,bitAddr,sw);
+}
 
 
 
@@ -314,4 +336,21 @@ byte V9260F::uchar_checksum(byte *data, byte dataSize)
   tempData = ~tempData;   //再取反
   tempData = tempData + 0x33; //再加0x33
   return tempData;
+}
+
+
+
+
+bool V9260F::readBitData(uint32_t RegisterData,uint8_t RegisterAddr)
+{
+	uint32_t tempData = RegisterData;
+	return bitRead(tempData,RegisterAddr);
+}
+
+
+void V9260F::setBitData(uint32_t RegisterData,uint8_t RegisterAddr,bool sw)
+{
+	uint32_t tempData = RegisterData;   //获取数据
+	bitWrite(tempData,RegisterAddr,sw);  //修改bit数据
+	RegisterData = tempData; //回写至寄存器缓存
 }
