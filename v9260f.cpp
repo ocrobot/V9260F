@@ -263,10 +263,10 @@ void V9260F::writeRegisterData(uint16_t Addr, uint32_t writeData, byte Device_ad
   for (byte a = 0; a < 4; a++)
   {
     tempReadData[a] = _Serial->read();
-    //SerialUSB.print(tempReadData[a], HEX);
-    //SerialUSB.print(",");
+    SerialUSB.print(tempReadData[a], HEX);
+    SerialUSB.print(",");
   }
-  //SerialUSB.println();
+  SerialUSB.println();
 }
 
 
